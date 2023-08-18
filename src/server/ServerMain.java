@@ -16,7 +16,7 @@ public class ServerMain {
             System.out.println("Server running failed.");
         }
         while (true) {
-            Socket socket = null;
+            Socket socket;
             try {
                 // 接教客户连接
                 socket = serverSocket.accept();

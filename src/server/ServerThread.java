@@ -31,6 +31,8 @@ public class ServerThread extends Thread{
             try {
                 // 断开连接
                 if(socket != null) socket.close();
+                this.writer.close();
+                this.reader.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

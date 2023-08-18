@@ -38,6 +38,8 @@ public class client_main {
                 System.out.println("Server's response: " + response);
             }
             if(socket != null) socket.close();
+            in.close();
+            out.close();
             // 关闭连接
         } catch (IOException e) {
             e.printStackTrace();
