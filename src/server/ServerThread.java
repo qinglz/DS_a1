@@ -1,31 +1,76 @@
 package server;
 
+import data_package.MyRequest;
+import data_package.MyResponse;
+
 import java.io.*;
 import java.net.Socket;
 
 public class ServerThread extends Thread{
     private Socket socket;
-    private PrintWriter writer;
-    private BufferedReader reader;
+    private ObjectOutputStream writer;
+    private ObjectInputStream reader;
+    private Dictionary dictionary;
 
-    public ServerThread(Socket socket) throws IOException{
+    public ServerThread(Socket socket, Dictionary dictionary) throws IOException{
+        this.dictionary = dictionary;
         this.socket = socket;
-        this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        this.writer = new PrintWriter(socket.getOutputStream(),true);
+        this.reader = new ObjectInputStream(socket.getInputStream());
+        this.writer = new ObjectOutputStream(socket.getOutputStream());
     }
     public void run() {
         try {
             System.out.println("New connection accepted" + socket.getInetAddress() + ":" + socket.getPort());
 
-            String msg = null;
+            MyRequest myRequest;
+            MyResponse myResponse;
             // 接收和发送数据，直到通信结束
-            while ((msg = reader.readLine()) != null) {
-                System.out.println("from "+ socket.getInetAddress() + ":" + socket.getPort() + ">" + msg);
-                writer.println(msg);
-//                System.out.println("sent"+msg);
-                if (msg.equalsIgnoreCase("exit")) break;
+            while ((myRequest = (MyRequest)reader.readObject()) != null) {
+                System.out.println("from "+ socket.getInetAddress() + ":" + socket.getPort() + ">" + myRequest);
+                if (myRequest.getOperation().equalsIgnoreCase("exit")){
+                    break;
+                }else if (myRequest.getOperation().equalsIgnoreCase("add")){
+                    if (myRequest.getMeanings()!=null&&myRequest.getWord()!=null){
+                        try{
+                            dictionary.addNewWord(myRequest.getWord(),myRequest.getMeanings());
+                            myResponse = new MyResponse(0,"Succeed",null);
+                        }catch (IOException e){
+                            myResponse = new MyResponse(2,"Fail to add word",null);
+                        }
+                    }else {
+                        myResponse = new MyResponse(1,"Invalid input",null);
+                    }
+                    writer.writeObject(myResponse);
+                }else if (myRequest.getOperation().equalsIgnoreCase("delete")){
+                    if (myRequest.getWord()!=null){
+                        try{
+                            dictionary.deleteWord(myRequest.getWord());
+                            myResponse = new MyResponse(0,"Succeed",null);
+                        }catch (IOException e){
+                            myResponse = new MyResponse(3,"Fail to delete word",null);
+                        }
+                    }else {
+                        myResponse = new MyResponse(1,"Invalid input",null);
+                    }
+                    writer.writeObject(myResponse);
+                }else if (myRequest.getOperation().equalsIgnoreCase("update")){
+                    if (myRequest.getMeanings()!=null&&myRequest.getWord()!=null){
+                        try{
+                            dictionary.updateWord(myRequest.getWord(),myRequest.getMeanings());
+                            myResponse = new MyResponse(0,"Succeed",null);
+                        }catch (IOException e){
+                            myResponse = new MyResponse(2,"Fail to update word",null);
+                        }
+                    }else {
+                        myResponse = new MyResponse(1,"Invalid input",null);
+                    }
+                    writer.writeObject(myResponse);
+                }else if (myRequest.getOperation().equalsIgnoreCase("meanings")){
+
+                }
+
             }
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
             try {
