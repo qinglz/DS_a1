@@ -5,6 +5,8 @@ import data_package.MyResponse;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServerThread extends Thread{
     private Socket socket;
@@ -15,8 +17,9 @@ public class ServerThread extends Thread{
     public ServerThread(Socket socket, Dictionary dictionary) throws IOException{
         this.dictionary = dictionary;
         this.socket = socket;
-        this.reader = new ObjectInputStream(socket.getInputStream());
         this.writer = new ObjectOutputStream(socket.getOutputStream());
+        this.reader = new ObjectInputStream(socket.getInputStream());
+
     }
     public void run() {
         try {
@@ -32,10 +35,15 @@ public class ServerThread extends Thread{
                 }else if (myRequest.getOperation().equalsIgnoreCase("add")){
                     if (myRequest.getMeanings()!=null&&myRequest.getWord()!=null){
                         try{
-                            dictionary.addNewWord(myRequest.getWord(),myRequest.getMeanings());
-                            myResponse = new MyResponse(0,"Succeed",null);
+                            boolean replicated = !dictionary.addNewWord(myRequest.getWord(),myRequest.getMeanings());
+                            if(replicated){
+                                myResponse = new MyResponse(4, "Replicated word", null);
+                            }else {
+                                myResponse = new MyResponse(0,"Succeed",null);
+                            }
+
                         }catch (IOException e){
-                            myResponse = new MyResponse(2,"Fail to add word",null);
+                            myResponse = new MyResponse(2,"Fail to add word to dictionary file",null);
                         }
                     }else {
                         myResponse = new MyResponse(1,"Invalid input",null);
@@ -44,8 +52,12 @@ public class ServerThread extends Thread{
                 }else if (myRequest.getOperation().equalsIgnoreCase("delete")){
                     if (myRequest.getWord()!=null){
                         try{
-                            dictionary.deleteWord(myRequest.getWord());
-                            myResponse = new MyResponse(0,"Succeed",null);
+                            boolean notFound = !dictionary.deleteWord(myRequest.getWord());
+                            if (notFound){
+                                myResponse = new MyResponse(5, "Cannot find the word", null);
+                            }else {
+                                myResponse = new MyResponse(0, "Succeed", null);
+                            }
                         }catch (IOException e){
                             myResponse = new MyResponse(3,"Fail to delete word",null);
                         }
@@ -56,8 +68,12 @@ public class ServerThread extends Thread{
                 }else if (myRequest.getOperation().equalsIgnoreCase("update")){
                     if (myRequest.getMeanings()!=null&&myRequest.getWord()!=null){
                         try{
-                            dictionary.updateWord(myRequest.getWord(),myRequest.getMeanings());
-                            myResponse = new MyResponse(0,"Succeed",null);
+                            boolean notFound = !dictionary.updateWord(myRequest.getWord(),myRequest.getMeanings());
+                            if(notFound){
+                                myResponse = new MyResponse(5, "Cannot find the word", null);
+                            }else {
+                                myResponse = new MyResponse(0, "Succeed", null);
+                            }
                         }catch (IOException e){
                             myResponse = new MyResponse(2,"Fail to update word",null);
                         }
@@ -66,7 +82,20 @@ public class ServerThread extends Thread{
                     }
                     writer.writeObject(myResponse);
                 }else if (myRequest.getOperation().equalsIgnoreCase("meanings")){
-
+                    if (myRequest.getWord()!=null){
+                        List<String> ms = dictionary.getMeaning(myRequest.getWord());
+                        if (ms==null){
+                            myResponse = new MyResponse(5,"Cannot find the word",null);
+                        }else {
+                            myResponse = new MyResponse(0,"Succeed",ms);
+                        }
+                    }else {
+                        myResponse = new MyResponse(1,"Invalid input",null);
+                    }
+                    writer.writeObject(myResponse);
+                }else {
+                    myResponse = new MyResponse(1,"Invalid input",null);
+                    writer.writeObject(myResponse);
                 }
 
             }

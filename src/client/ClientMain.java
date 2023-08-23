@@ -16,9 +16,10 @@ public class ClientMain {
 
             // 获取输入流和输出流 输入流和输出流是通过socket对象来进行数据传输的。
 //            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 //            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+
             // 从控制台读取用户输入
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String message;
