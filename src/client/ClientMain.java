@@ -14,6 +14,7 @@ public class ClientMain {
         ClientSocketChannel channel = new ClientSocketChannel("127.0.0.1", 8000);
         ClientWindow clientWindow = new ClientWindow(channel);
         }catch (IOException | ClassNotFoundException e){
+            System.out.println("Cannot connect to serve, make sure you run server first.");
             e.printStackTrace();
         }
     }
