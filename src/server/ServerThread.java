@@ -5,6 +5,7 @@ import data_package.MyResponse;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
