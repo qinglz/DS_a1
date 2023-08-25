@@ -10,7 +10,8 @@ public class ServerMain {
         try {
             dictionary = new Dictionary(args[1]);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Read Dictionary File Failed.\nMake Sure .csv File Exists.");
+//            e.printStackTrace();
             return;
         }
         int port = Integer.parseInt(args[0]);
@@ -19,7 +20,7 @@ public class ServerMain {
             serverSocket = new ServerSocket(port);
             System.out.println("Server is running now.");
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             System.out.println("Server running failed.");
             return;
         }
@@ -33,7 +34,8 @@ public class ServerMain {
                 // 启动工作线程
                 workThread.start();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Fail To Start WorkerThread");
+//                e.printStackTrace();
             }
         }
     }

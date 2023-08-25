@@ -101,7 +101,8 @@ public class ServerThread extends Thread{
 
             }
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("Socket Error, Client May Shut Down");
+//            e.printStackTrace();
         } finally {
             try {
                 // 断开连接
@@ -109,7 +110,7 @@ public class ServerThread extends Thread{
                 this.writer.close();
                 this.reader.close();
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
             }
         }
     }

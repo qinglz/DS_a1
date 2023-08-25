@@ -73,7 +73,7 @@ public class ClientWindow extends JFrame{
                 JDialog err = getErrDialog(searchingDialog);
                 err.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 err.setVisible(true);
-                e.printStackTrace();
+//                e.printStackTrace();
             }
         });
         return getMeaningButton;
@@ -109,7 +109,7 @@ public class ClientWindow extends JFrame{
                 JDialog err = getErrDialog(searchingDialog);
                 err.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 err.setVisible(true);
-                e.printStackTrace();
+//                e.printStackTrace();
             }
         });
         return deleteWordButton;
@@ -149,7 +149,7 @@ public class ClientWindow extends JFrame{
                 JDialog err = getErrDialog(searchDialog);
                 err.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 err.setVisible(true);
-                e.printStackTrace();
+//                e.printStackTrace();
             }
         });
 
@@ -191,7 +191,7 @@ public class ClientWindow extends JFrame{
                 JDialog err = getErrDialog(searchDialog);
                 err.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 err.setVisible(true);
-                e.printStackTrace();
+//                e.printStackTrace();
             }
         });
 
