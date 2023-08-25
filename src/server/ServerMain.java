@@ -8,12 +8,12 @@ public class ServerMain {
     public static void main(String args[]){
         Dictionary dictionary = null;
         try {
-            dictionary = new Dictionary("./dict.csv");
+            dictionary = new Dictionary(args[1]);
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
-        int port = 8000;
+        int port = Integer.parseInt(args[0]);
         ServerSocket serverSocket = null;
         try{
             serverSocket = new ServerSocket(port);

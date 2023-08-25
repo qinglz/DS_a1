@@ -15,7 +15,7 @@ public class Dictionary {
         this.path = path;
         BufferedReader reader = new BufferedReader(new FileReader(path));
         while((newline = reader.readLine())!=null){
-            newlineS = newline.split(",");
+            newlineS = newline.split(";");
             if(this.wordData.containsKey(newlineS[0])){
                 List<String> wordMeanings = this.wordData.get(newlineS[0]);
                 wordMeanings.add(newlineS[1]);
@@ -61,11 +61,11 @@ public class Dictionary {
         BufferedWriter writer = new BufferedWriter(new FileWriter(this.path));
         for(Map.Entry<String,List<String>> entry:this.wordData.entrySet()){
             if (entry.getValue().size()==1){
-                writer.write(entry.getKey()+","+entry.getValue().get(0)+",");
+                writer.write(entry.getKey()+";"+entry.getValue().get(0)+";");
                 writer.newLine();
             }else {
                 for (String meaning: entry.getValue()){
-                    writer.write(entry.getKey()+","+meaning+",");
+                    writer.write(entry.getKey()+";"+meaning+";");
                     writer.newLine();
                 }
             }
